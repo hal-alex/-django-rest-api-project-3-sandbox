@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer
 from rest_framework.validators import ValidationError
+from .models import User
 
 class RegisterAPIView(APIView):
     def post(self, request):
@@ -36,4 +37,23 @@ class RegisterAPIView(APIView):
 
         serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data)
+
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        email = request.data["email"]
+        password = request.data["password"]
+
+        user = User.objects.filter(email=email).first()
+
+        if user is None:
+            raise exceptions.AuthenticationFailed("Invalid credentials")
+        
+        if not user.check_password(password):
+            raise exceptions.AuthenticationFailed("Invalid credentials")
+        
+        serializer = UserSerializer(user)
+
+        return Response(serializer.data)
+
