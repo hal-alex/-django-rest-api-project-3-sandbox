@@ -1,15 +1,16 @@
-import datetime
+import datetime, random, string
 from rest_framework.views import APIView
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer
 from rest_framework.validators import ValidationError
-from .models import User, UserToken
+from .models import User, UserToken, Reset
 from .authentication import (create_access_token, 
     create_refresh_token,
     JWTAuthentication,
     decode_refresh_token)
+from django.core.mail import send_mail
 
 class RegisterAPIView(APIView):
     def post(self, request):
@@ -115,3 +116,29 @@ class LogoutAPIView(APIView):
         }
 
         return response
+
+
+class ResetAPIView(APIView):
+    def post(self, request):
+        email = request.data["email"]
+        token = ''.join(random.choice(string.ascii_lowercase 
+            + string.digits) for _ in range(10))
+        
+        Reset.objects.create(
+            email=email,
+            token=token
+        )
+
+        url = 'http://localhost:3000/reset/' + token
+
+        send_mail(
+            subject="Reset your password",
+            message="Click %s to reset password" %url,
+            from_email="example@example.com",
+            recipient_list=[email]
+        )
+
+        return Response({
+            "message": "success"
+        })
+    
