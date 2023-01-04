@@ -27,6 +27,14 @@ def create_refresh_token(id):
         "iat": datetime.datetime.utcnow()
     }, "refresh_secret", algorithm="HS256")
 
+def decode_refresh_token(token):
+    try:
+        payload = jwt.decode(token, "refresh_secret", algorithms="HS256")
+
+        return payload["user_id"]
+    except:
+        raise exceptions.AuthenticationFailed("unathenticated")
+
 class JWTAuthentication(BaseAuthentication):
     def authenticate(self, request):
         auth = get_authorization_header(request).split()
