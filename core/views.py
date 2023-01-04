@@ -5,7 +5,9 @@ from rest_framework import status
 from .serializers import UserSerializer
 from rest_framework.validators import ValidationError
 from .models import User
-from .authentication import create_access_token, create_refresh_token, decode_access_token
+from .authentication import (create_access_token, 
+    create_refresh_token,
+    JWTAuthentication)
 from rest_framework.authentication import get_authorization_header
 
 class RegisterAPIView(APIView):
@@ -68,17 +70,8 @@ class LoginAPIView(APIView):
         return response
 
 class UserAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+
     def get(self, request):
-        auth = get_authorization_header(request).split()
+        return Response(UserSerializer(request.user).data)
 
-        if auth and len(auth) == 2:
-            token = auth[1].decode("utf-8")
-            id = decode_access_token(token)
-
-            user = User.objects.get(pk=id)
-
-            if user:
-                serializer = UserSerializer(user)
-                return Response(serializer.data)
-        
-        raise exceptions.AuthenticationFailed("unathenticated")
