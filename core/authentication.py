@@ -1,4 +1,5 @@
-import jwt, datetime
+import jwt
+from datetime import datetime, timedelta
 from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 from .models import User
@@ -8,8 +9,8 @@ from .models import User
 def create_access_token(id):
     return jwt.encode({
         "user_id": id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=30),
-        "iat": datetime.datetime.utcnow()
+        "exp": datetime.now() + timedelta(seconds=30),
+        "iat": datetime.now()
     }, "access_secret", algorithm="HS256")
 
 def decode_access_token(token):
@@ -21,10 +22,12 @@ def decode_access_token(token):
         raise exceptions.AuthenticationFailed("unathenticated")
 
 def create_refresh_token(id):
+    dt = datetime.now() + timedelta(days=7)
+
     return jwt.encode({
         "user_id": id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
-        "iat": datetime.datetime.utcnow()
+        "exp": int(dt.strftime('%S')),
+        "iat": datetime.now(),
     }, "refresh_secret", algorithm="HS256")
 
 def decode_refresh_token(token):
