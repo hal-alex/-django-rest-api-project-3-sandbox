@@ -169,8 +169,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from .serializers import UserSerializer
+
 from django.contrib.auth import get_user_model
 
 class RegisterAPIView(APIView):
     def post(self, request):
-        print(request.data)
+        serialized_data = UserSerializer(data=request.data)
+
+        try:
+            serialized_data.is_valid()
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_202_ACCEPTED)
+        except Exception as e: 
+            print(e)
+            return Response(e.__dict__ if e.__dict__ else str(e),
+            status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+        # print(request.data)
