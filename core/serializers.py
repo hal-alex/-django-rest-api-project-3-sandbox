@@ -1,9 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 from .models import User
 from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from django.contrib.auth.hashers import make_password
 
 class UserSerializer(ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -35,7 +34,7 @@ class UserSerializer(ModelSerializer):
             raise ValidationError({"password": 
             "Password must contain at least one number"})
         
-        password = make_password(password)
+        # password = make_password(password)
         
         return data
 
@@ -46,15 +45,14 @@ class UserSerializer(ModelSerializer):
             "password": {"write_only": True}
         }
         
-    # def create(self, validated_data):
-    #     password = validated_data.pop("password", None)
-    #     instance = self.Meta.model(**validated_data)
+    def create(self, validated_data):
+        password = validated_data.pop("password", None)
+        instance = self.Meta.model(**validated_data)
 
-    #     if password is not None: 
-    #         instance.set_password(password)
+        if password is not None: 
+            instance.set_password(password)
 
-    #     instance.save()
+        instance.save()
 
-    #     return instance
-
+        return instance
 

@@ -177,13 +177,8 @@ class RegisterAPIView(APIView):
     def post(self, request):
         serialized_data = UserSerializer(data=request.data)
 
-        try:
-            serialized_data.is_valid()
+        if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-            return Response(serialized_data.data, status=status.HTTP_202_ACCEPTED)
-        except Exception as e: 
-            print(e)
-            return Response(e.__dict__ if e.__dict__ else str(e),
-            status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-        # print(request.data)
+            return Response(serialized_data.data)
+        else:
+            return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
