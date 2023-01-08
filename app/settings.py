@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'core',
     'environ',
     'corsheaders',
+    'advance',
 ]
 
 MIDDLEWARE = [
@@ -94,6 +95,12 @@ DATABASES = {
         'HOST': '127.0.0.1', 
         'PORT': '5432',
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'core.authentication.JWTAuthentication'
+    ]
 }
 
 
