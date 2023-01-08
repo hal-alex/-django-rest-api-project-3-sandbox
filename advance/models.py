@@ -10,6 +10,12 @@ class Advance(models.Model):
         unique=True
     )
 
+    owner = models.ForeignKey(
+        "core.User",
+        related_name="advances",
+        on_delete = models.CASCADE
+    )
+
     DEBT = "Debt"
     IMPROVEMENT = "Improvement"
     CAR = "Car"
@@ -32,7 +38,6 @@ class Advance(models.Model):
     lease_agreement_file = models.FileField()
     rent_protection_policy_file = models.FileField()
     tenant_vetting_file = models.FileField()
-    amount_of_rent_selling = models.DecimalField(max_digits=8, decimal_places=2)
     amount_of_rent_selling = models.DecimalField(max_digits=8, decimal_places=2)
 
     THREE_MONTHS = 3
