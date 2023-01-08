@@ -38,12 +38,12 @@ class LoginAPIView(APIView):
         if not user_to_login.check_password(password):
             raise PermissionDenied("Invalid login details")
 
-        expiry_time = datetime.now() + timedelta(hours=1)
-        
+        expiry_time = datetime.utcnow() + timedelta(hours=1)
+
         token = jwt.encode(
             {
-                "sub": str(user_to_login.id),
-                "exp": expiry_time.strftime('%s')
+                "id": str(user_to_login.id),
+                "exp": expiry_time
             },
             settings.SECRET_KEY,
             "HS256"
