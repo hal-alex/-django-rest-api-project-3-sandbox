@@ -12,8 +12,7 @@ class Adv(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(max_length=1000)
-    owner = models.ForeignKey(
+    owner_id = models.ForeignKey(
         'core.User',
-        related_name="advs",
         on_delete = models.CASCADE
     )

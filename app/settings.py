@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'adv',
 ]
 
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,7 +64,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'app.urls'
-
 
 
 TEMPLATES = [
@@ -97,6 +99,28 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'core.authentication.JWTAuthentication'
+    ]
+}
+
+
+
+# REST_FRAMEWORK = {     
+#     'DEFAULT_AUTHENTICATION_CLASS': 
+#     ('rest_framework_simplejwt.authentication.JWTAuthentication',),     
+#     'DEFAULT_PERMISSION_CLASS': 
+#     ('rest_framework.permissions.IsAuthenticated',)
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -117,7 +141,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'core.user'
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
