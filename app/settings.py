@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'environ',
     'corsheaders',
     'core',
+    'adv',
 ]
 
 MIDDLEWARE = [
