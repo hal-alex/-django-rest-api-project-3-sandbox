@@ -9,12 +9,12 @@ from .models import Advance
 from .serializers import AdvanceSerializer
 
 class AdvanceListView(APIView):
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
 
     def post(self, request):
         advance_to_create = AdvanceSerializer(data=request.data)
-        print(advance_to_create)
-        print(request.user)
+        # print(advance_to_create)
+        print("Request.user", request.user)
 
         if advance_to_create.is_valid(raise_exception=True):
             advance_to_create.save()
